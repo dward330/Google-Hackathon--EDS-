@@ -1,0 +1,10 @@
+SQL Keep Sakes: 
+
+//Select 10 from the preceding query
+SELECT * FROM Econ_Dev_South.Environment_Issues Limit 10
+
+//Select 10 from the preceding query and skip the first 10
+SELECT * FROM Econ_Dev_South.Environment_Issues Limit 10 offset 10;
+
+//Select 10 from the preceding query and skip the first 20
+SELECT * FROM Econ_Dev_South.Environment_Issues Limit 10 offset 20;

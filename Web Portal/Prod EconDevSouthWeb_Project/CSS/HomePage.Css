@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+
+img.ri
+{
+	position: relative;
+	max-width: 80%;
+	top: 10%;
+	left: 10%;
+	border-radius: 3px;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.9);
+}

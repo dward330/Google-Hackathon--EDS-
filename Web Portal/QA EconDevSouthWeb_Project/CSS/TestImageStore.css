@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+
+#image_border {
+    border-style: dashed;
+    border-width: 5px;
+}

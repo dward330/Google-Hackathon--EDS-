@@ -1,0 +1,132 @@
+Steps to Connect to AWS Linux Box:
+	1) Connect to AWS Linux Box:
+		ssh -i ./EDSAPPkeypair.pem 52.11.116.237 -l ec2-user  -> Production Instance
+		ssh -i ./EDSAPPkeypair.pem 52.24.21.128 -l ec2-user -> Quality Assurance Instance
+
+		Add Linux User Group:
+		cd /var/www/html
+		sudo groupadd <group name>
+
+			Add User to User Group:
+			sudo usermod -a -G <group name> <user name>
+			example: sudo usermod -a -G <group name> <ec2-user>
+			THEN YOU NEED TO LOG OUT AND LOG BACK IN
+
+		Files and Directories: Configuring Read Write Execute Access
+			Set a user group as the owner of the root directory
+				sudo chown -R <user name>: <direcory>
+				example: sudo chown -R ec2-user: /var/www
+
+			Set directory owner as the owner of the files created in this directory
+				sudo chmod 2775 /var/www
+
+			Set directory owner as the owner of the sub-directories
+				find /var/www -type d -exec sudo chmod 2775 {} +
+
+			Set directory owner as the owner of the files created in the sub-directories
+				find /var/www -type f -exec sudo chmod 0664 {} +
+
+
+	2) Connect to sql database:
+		PRODUCTION DATABASE:
+		mysql -h economic-development-south-prod-db.cd6byyjzs6xl.us-west-2.rds.amazonaws.com -u admin -p
+		master password: adminpassword
+
+		PROD DB Login Info:
+	 		master username:admin
+	 		master password:adminpassword
+
+		QUALITY ASSURANCE DATABASE:
+		mysql -h qa-server-database.cd6byyjzs6xl.us-west-2.rds.amazonaws.com -u admin -p
+		password: EDSQADBpass
+
+		QUALITY ASSURANCE DATABASE:
+
+		QA DB Instance: Economic-Development-South-QA-DB
+	 	QA DB Login Info:
+	 		master username:EDSQADB
+	 		master password:EDSQADBpass
+
+
+	3) Command to show databases:
+		"show databases;"
+
+	   Command to use Database:
+		"use <database_name>;"
+
+	   Command to show tables:
+	   	"show tables;"
+
+	   Command to describe the table:
+	    "describe <table_name>;"
+
+	   Command to show the sql code to create a given table's definition:
+	   "show create table Environment_Issues;"
+
+	   Command to show users and passwords for a database:
+	   "select user, password from mysql.user;""
+
+	   	Our Table Code Structure:
+	   		CREATE TABLE Environment_Issues (
+			  id int unsigned AUTO_INCREMENT,
+			  firstName text,
+			  lastName text,
+			  phoneNumber text,
+			  email text,
+			  zipCode text,
+			  description text,
+			  issueType text,
+			  longitude text,
+			  latitude text,
+			  date timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+			  Image_Here text,
+			  Image_Filepath text,
+			  PRIMARY KEY (`id`)
+			);
+
+	 4) Web Server Log (Real-Time): Gives you request info and Response Status
+	 	cd /etc/httpd/
+	 	sudo tail - f logs/access_log
+
+	 5) When Creating a DataBase:
+	 	Type: MySQL
+	 	License Model: general-public-license
+	 	DB Engine Version: 5.6.13
+	 	DB Instance Class: db.t1.micro - 1vCPU, 0.613 GiB RAM
+	 	Multi-AZ Deployment: No
+	 	Allocated Storage: 5 GB
+	 	User Provisioned IOPS: No
+	 	DB Instance Identifier: <database name, not the legit name used in sql code>
+
+	 	Advance Settings:
+	 	VPC: Default
+	 	DB Subnet Group: Default
+	 	Publicly Accessible: Yes
+	 	Availibility Zone: No Preference
+	 	VPC Security Group: <The one that has the constraints on mysql database>
+	 	Database Name: <Database Name, This is the legit name used in sql code>
+	 	Database Port: <example: 3307>
+	 	Parameter Group: default
+	 	Option Group: default
+	 	Backup Retention Period: 7 days
+
+	 	A) Creating a Table:
+	 		SQL Code:
+
+	 6) Creating an Instance:
+	 		Instance Key and Values:
+	 			Name: Economic Development South
+	 			Role: Quality Assurance
+	 			Environment: QA
+
+	 7) User Data for Web Server Configuration:
+	 	Located in Project Directory:
+
+	 	#! /bin/bash -ex
+		yum update -y
+		yum groupinstall -y "Web Server" "MySQL Database" "PHP Support"
+		service httpd start
+		chkconfig httpd on
+
+	 8) 
+
